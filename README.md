@@ -18,8 +18,6 @@ Linguagem de Programação: Kotlin
 
 Interface do Usuário: Views e XML
 
-Controle de Versão: Git e GitHub
-
 Gerenciador de Build: Gradle
 
 Persistência de Dados: SharedPreferences com a biblioteca Gson
