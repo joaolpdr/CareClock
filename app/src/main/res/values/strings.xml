@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">CareClock</string>
+    <string name="default_web_client_id" translatable="false">420551570103-padjl0gtco7eg8cmhl0cs52i4j7ls4dl.apps.googleusercontent.com</string>
 </resources>

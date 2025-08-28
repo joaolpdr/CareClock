@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "420551570103",
+    "project_id": "careclock-74a00281",
+    "storage_bucket": "careclock-74a00281.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:420551570103:android:3a725956dbee00c1d09332",
+        "android_client_info": {
+          "package_name": "com.example.careclock"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "420551570103-5s3s1e3r5jr57juvt2r8ss052cl6jsbo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.careclock",
+            "certificate_hash": "39f808f252c2838ed3e4ca2c6850aa6276305d90"
+          }
+        },
+        {
+          "client_id": "420551570103-padjl0gtco7eg8cmhl0cs52i4j7ls4dl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCynS8NT-D0mgUkvXyfqwvyN8mqe3uJgG4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "420551570103-padjl0gtco7eg8cmhl0cs52i4j7ls4dl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

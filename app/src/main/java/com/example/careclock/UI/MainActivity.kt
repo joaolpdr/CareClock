@@ -9,7 +9,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.careclock.R
-import com.example.careclock.models.Medication
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import com.example.careclock.notifications.AlarmScheduler
 import com.example.careclock.notifications.NotificationHelper
 import com.example.careclock.storage.MedicationStorage
@@ -25,6 +29,16 @@ class MainActivity : AppCompatActivity() {
             handler.postDelayed(this, 1000) // atualiza a cada segundo
         }
     }
+
+    // Prepara o "lançador" do pedido de permissão
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+            if (isGranted) {
+                // Permissão concedida.
+            } else {
+                // Permissão negada. Pode mostrar uma mensagem a explicar porque a permissão é importante.
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +70,15 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<FloatingActionButton>(R.id.fabAdd).setOnClickListener {
             startActivity(Intent(this, AddMedicationActivity::class.java))
+        }
+    }
+
+    // Função para verificar e pedir a permissão
+    private fun askNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // Apenas para Android 13+
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
         }
     }
 

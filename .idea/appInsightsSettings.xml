@@ -23,10 +23,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.example.careclock" />
+                  <option name="mobileSdkAppId" value="1:420551570103:android:3a725956dbee00c1d09332" />
+                  <option name="projectId" value="careclock-74a00281" />
+                  <option name="projectNumber" value="420551570103" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
