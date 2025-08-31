@@ -1,38 +1,199 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:background="@android:color/white"
+    android:fillViewport="true"
+    tools:context=".ui.AddMedicationActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="32dp">
+
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/logologin" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Careclock"
+            android:textColor="@android:color/black"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="Tratamento"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <RadioGroup
+            android:id="@+id/rgTreatmentFor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rbForMe"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="Para mim" />
+
+            <RadioButton
+                android:id="@+id/rbCaregiver"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="Sou cuidador" />
+        </RadioGroup>
 
         <EditText
             android:id="@+id/etName"
             android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/background_rounded_input"
+            android:hint="Nome do medicamento"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp" />
+
+        <TextView
+            android:id="@+id/tvStartDate"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/background_rounded_input"
+            android:gravity="center_vertical"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:text="Data de início"
+            android:textColor="#808080"
+            android:textSize="18sp" />
+
+        <RadioGroup
+            android:id="@+id/rgDuration"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Nome do medicamento"/>
+            android:layout_marginTop="24dp"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rbIndeterminate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="Indeterminado" />
+
+            <RadioButton
+                android:id="@+id/rbWithEndDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="Com prazo" />
+        </RadioGroup>
+
+        <EditText
+            android:id="@+id/etDuration"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/background_rounded_input"
+            android:hint="Término do tratamento (dias)"
+            android:inputType="number"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <LinearLayout
+            android:id="@+id/layoutRenew"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="8dp"
+            android:visibility="visible">
+
+            <CheckBox
+                android:id="@+id/cbRenew"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lembrar-me de renovar a receita" />
+
+            <TextView
+                android:id="@+id/tvRenewDate"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/background_rounded_input"
+                android:gravity="center_vertical"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:text="Data da renovação"
+                android:textColor="#808080"
+                android:textSize="18sp"
+                android:visibility="gone"
+                tools:visibility="visible"/>
+        </LinearLayout>
+
 
         <EditText
             android:id="@+id/etInterval"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Intervalo (minutos)"
-            android:inputType="number"/>
+            android:layout_height="50dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/background_rounded_input"
+            android:hint="Intervalo das doses (horas)"
+            android:inputType="number"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp" />
 
-        <Button
-            android:id="@+id/btnPickDateTime"
+        <RadioGroup
+            android:id="@+id/rgNotificationType"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Escolher data/hora de início"/>
+            android:layout_marginTop="24dp"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rbAlarm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="Incluir alarme" />
+
+            <RadioButton
+                android:id="@+id/rbNotificationOnly"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="Somente notificação" />
+        </RadioGroup>
 
         <Button
             android:id="@+id/btnSave"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Salvar"/>
+            android:layout_height="60dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="32dp"
+            android:background="@drawable/rounded_button_green"
+            android:text="Próximo"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 </ScrollView>

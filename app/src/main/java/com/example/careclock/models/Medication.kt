@@ -1,16 +1,19 @@
-// app/src/main/java/com/example/careclock/models/Medication.kt
 package com.example.careclock.models
 
 import java.util.*
 
 data class Medication(
-    val id: String = UUID.randomUUID().toString(),
-    var name: String,
-    var startTimeMillis: Long,
-    var intervalMinutes: Long,
+    var id: String = UUID.randomUUID().toString(),
+    var name: String = "",
+    var startTimeMillis: Long = 0,
+    var intervalMinutes: Long = 0,
     var durationDays: Int? = null,
-    var active: Boolean = true
+    var active: Boolean = true,
+    var renewalDateMillis: Long? = null
 ) {
+    // Adiciona um construtor vazio que é necessário para o Firestore
+    constructor() : this("", "", 0, 0, null, true, null)
+
     fun nextDoseAfter(now: Long = System.currentTimeMillis()): Long {
         if (!active) return Long.MAX_VALUE
         var next = startTimeMillis

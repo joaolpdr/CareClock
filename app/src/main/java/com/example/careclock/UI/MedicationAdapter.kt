@@ -1,34 +1,40 @@
-// app/src/main/java/com/example/careclock/ui/MedicationAdapter.kt
 package com.example.careclock.ui
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.careclock.R
 import com.example.careclock.models.Medication
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.math.max
 
+
 class MedicationAdapter(
-    private val list: List<Medication>,
+    var list: List<Medication>,
     private val listener: (Medication, Action) -> Unit
 ) : RecyclerView.Adapter<MedicationAdapter.VH>() {
 
     enum class Action { EDIT, DELETE }
+    private lateinit var context: Context
 
     inner class VH(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val name = itemView.findViewById<TextView>(R.id.tvName)
-        val next = itemView.findViewById<TextView>(R.id.tvNext)
-        val countdown = itemView.findViewById<TextView>(R.id.tvCountdown)
-        val btnDelete = itemView.findViewById<ImageButton>(R.id.btnDelete)
+        val name: TextView = itemView.findViewById(R.id.tvName)
+        val countdown: TextView = itemView.findViewById(R.id.tvCountdown)
+        val startTime: TextView = itemView.findViewById(R.id.tvStartTime)
+        val endDateLabel: TextView = itemView.findViewById(R.id.tvEndDateLabel)
+        val layout: ConstraintLayout = itemView as ConstraintLayout
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
-        val v = LayoutInflater.from(parent.context).inflate(R.layout.item_medication, parent, false)
+        context = parent.context
+        val v = LayoutInflater.from(context).inflate(R.layout.item_medication, parent, false)
         return VH(v)
     }
 
@@ -38,28 +44,49 @@ class MedicationAdapter(
         val med = list[position]
         holder.name.text = med.name
 
-        val nextMs = med.nextDoseAfter()
-        if (nextMs == Long.MAX_VALUE) {
-            holder.next.text = "Tratamento concluído"
-            holder.countdown.text = "-"
+        if (position % 2 == 0) {
+            holder.layout.background.setTint(ContextCompat.getColor(context, R.color.teal_700))
         } else {
-            val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
-            holder.next.text = "Próxima: ${sdf.format(Date(nextMs))}"
-
-            // countdown simples em HH:mm:ss
-            val diff = max(0L, nextMs - System.currentTimeMillis())
-            val s = diff / 1000
-            val h = s / 3600
-            val m = (s % 3600) / 60
-            val sec = s % 60
-            holder.countdown.text = String.format("%02d:%02d:%02d", h, m, sec)
+            holder.layout.background.setTint(ContextCompat.getColor(context, R.color.item_red))
         }
 
+        med.durationDays?.let { days ->
+            val calendar = Calendar.getInstance()
+            calendar.timeInMillis = med.startTimeMillis
+            calendar.add(Calendar.DAY_OF_YEAR, days)
+            val sdf = SimpleDateFormat("dd 'de' MMMM 'de' yyyy", Locale("pt", "BR"))
+            holder.endDateLabel.text = "Termina em ${sdf.format(calendar.time)}"
+            holder.endDateLabel.visibility = View.VISIBLE
+        } ?: run {
+            holder.endDateLabel.text = "Duração: Indeterminado" // Texto alternativo
+            holder.endDateLabel.visibility = View.VISIBLE
+        }
+
+        val nextMs = med.nextDoseAfter()
+        if (nextMs == Long.MAX_VALUE) {
+            holder.countdown.text = "Concluído"
+            holder.startTime.text = "Tratamento finalizado"
+        } else {
+            val diff = max(0L, nextMs - System.currentTimeMillis())
+            val hours = TimeUnit.MILLISECONDS.toHours(diff)
+            val minutes = TimeUnit.MILLISECONDS.toMinutes(diff) % 60
+            holder.countdown.text = String.format("%d horas e %d minutos", hours, minutes)
+
+            val startDiff = max(0L, System.currentTimeMillis() - med.startTimeMillis)
+            val days = TimeUnit.MILLISECONDS.toDays(startDiff)
+            val startHours = TimeUnit.MILLISECONDS.toHours(startDiff) % 24
+            holder.startTime.text = String.format("iniciou o tratamento a: %d dias e %d horas", days, startHours)
+        }
+
+        // Ação de clique curto para EDITAR
         holder.itemView.setOnClickListener {
             listener(med, Action.EDIT)
         }
-        holder.btnDelete.setOnClickListener {
+
+        // AÇÃO DE CLIQUE LONGO PARA APAGAR
+        holder.itemView.setOnLongClickListener {
             listener(med, Action.DELETE)
+            true // Retorna true para indicar que o evento foi consumido
         }
     }
 }

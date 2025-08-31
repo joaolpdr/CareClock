@@ -1,90 +1,184 @@
-// app/src/main/java/com/example/careclock/ui/AddMedicationActivity.kt
 package com.example.careclock.ui
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
+import android.util.Log
+import android.view.View
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.example.careclock.R
 import com.example.careclock.models.Medication
 import com.example.careclock.notifications.AlarmScheduler
 import com.example.careclock.storage.MedicationStorage
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import java.text.SimpleDateFormat
 import java.util.*
 
 class AddMedicationActivity : AppCompatActivity() {
 
     private var editingMedId: String? = null
+    private var chosenTime = Calendar.getInstance()
+    private var chosenRenewTime = Calendar.getInstance()
+    private var medicationBeingEdited: Medication? = null
+    private lateinit var profileIdForMedication: String // ID do perfil para quem o medicamento se destina
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_medication)
 
+        // Obtém para quem é este medicamento
+        profileIdForMedication = intent.getStringExtra("PROFILE_ID") ?: Firebase.auth.currentUser!!.uid
+
         val etName = findViewById<EditText>(R.id.etName)
+        val tvStartDate = findViewById<TextView>(R.id.tvStartDate)
+        val rgDuration = findViewById<RadioGroup>(R.id.rgDuration)
+        val etDuration = findViewById<EditText>(R.id.etDuration)
         val etInterval = findViewById<EditText>(R.id.etInterval)
-        val btnPick = findViewById<Button>(R.id.btnPickDateTime)
         val btnSave = findViewById<Button>(R.id.btnSave)
 
-        val c = Calendar.getInstance()
-        var chosenTime = c.timeInMillis
+        val layoutRenew = findViewById<LinearLayout>(R.id.layoutRenew)
+        val cbRenew = findViewById<CheckBox>(R.id.cbRenew)
+        val tvRenewDate = findViewById<TextView>(R.id.tvRenewDate)
 
-        btnPick.setOnClickListener {
-            // primeiro date picker
-            val dp = DatePickerDialog(this, { _, y, m, d ->
-                val tp = TimePickerDialog(this, { _, hour, minute ->
-                    val cal = Calendar.getInstance()
-                    cal.set(y, m, d, hour, minute, 0)
-                    chosenTime = cal.timeInMillis
-                    btnPick.text = "Início: ${Date(chosenTime)}"
-                }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), true)
-                tp.show()
-            }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH))
-            dp.show()
-        }
-
-        // se veio medId, estamos editando
-        editingMedId = intent.getStringExtra("medId")
-        val meds = MedicationStorage.load(this)
-        editingMedId?.let { id ->
-            val med = meds.find { it.id == id }
-            med?.let {
-                etName.setText(it.name)
-                etInterval.setText(it.intervalMinutes.toString())
-                chosenTime = it.startTimeMillis
-                btnPick.text = "Início: ${Date(chosenTime)}"
+        rgDuration.setOnCheckedChangeListener { _, checkedId ->
+            if (checkedId == R.id.rbWithEndDate) {
+                etDuration.visibility = View.VISIBLE
+                layoutRenew.visibility = View.GONE
+                cbRenew.isChecked = false
+            } else {
+                etDuration.visibility = View.GONE
+                layoutRenew.visibility = View.VISIBLE
+                etDuration.text.clear()
             }
         }
+
+        cbRenew.setOnCheckedChangeListener { _, isChecked ->
+            tvRenewDate.visibility = if (isChecked) View.VISIBLE else View.GONE
+        }
+
+        tvStartDate.setOnClickListener {
+            showDateTimePicker(chosenTime, tvStartDate, "Início: %s")
+        }
+        tvRenewDate.setOnClickListener {
+            showDateTimePicker(chosenRenewTime, tvRenewDate, "Renovar em: %s")
+        }
+
+        loadEditingMedicationData()
 
         btnSave.setOnClickListener {
             val name = etName.text.toString().trim()
-            val interval = etInterval.text.toString().toLongOrNull() ?: 0L
-            if (name.isEmpty() || interval <= 0) {
-                etName.error = "Preencha nome e intervalo"
+            val intervalHours = etInterval.text.toString().toLongOrNull() ?: 0L
+            val durationDays = if (etDuration.visibility == View.VISIBLE) {
+                etDuration.text.toString().toIntOrNull()
+            } else { null }
+
+            val renewalDate = if (cbRenew.isChecked) {
+                chosenRenewTime.timeInMillis
+            } else { null }
+
+            if (name.isEmpty() || intervalHours <= 0) {
+                Toast.makeText(this, "Preencha o nome e o intervalo das doses.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            if (editingMedId != null) {
-                val med = meds.find { it.id == editingMedId }
-                med?.let {
-                    it.name = name
-                    it.intervalMinutes = interval
-                    it.startTimeMillis = chosenTime
-                    MedicationStorage.save(this, meds)
-                    AlarmScheduler.cancel(this, it)
-                    AlarmScheduler.schedule(this, it)
+            val intervalMinutes = intervalHours * 60
+
+            saveMedication(name, chosenTime.timeInMillis, intervalMinutes, durationDays, renewalDate)
+        }
+    }
+
+    private fun showDateTimePicker(calendar: Calendar, textView: TextView, format: String) {
+        val currentCalendar = Calendar.getInstance()
+        DatePickerDialog(this, { _, year, month, dayOfMonth ->
+            TimePickerDialog(this, { _, hourOfDay, minute ->
+                calendar.set(year, month, dayOfMonth, hourOfDay, minute)
+                val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                textView.text = String.format(format, sdf.format(calendar.time))
+                textView.setTextColor(resources.getColor(android.R.color.black, null))
+            }, currentCalendar.get(Calendar.HOUR_OF_DAY), currentCalendar.get(Calendar.MINUTE), true).show()
+        }, currentCalendar.get(Calendar.YEAR), currentCalendar.get(Calendar.MONTH), currentCalendar.get(Calendar.DAY_OF_MONTH)).show()
+    }
+
+    private fun saveMedication(name: String, startTime: Long, intervalMinutes: Long, durationDays: Int?, renewalDate: Long?) {
+        val medicationToSave: Medication
+
+        if (medicationBeingEdited != null) {
+            medicationToSave = medicationBeingEdited!!
+            medicationToSave.name = name
+            medicationToSave.startTimeMillis = startTime
+            medicationToSave.intervalMinutes = intervalMinutes
+            medicationToSave.durationDays = durationDays
+            medicationToSave.renewalDateMillis = renewalDate
+            AlarmScheduler.cancel(this, medicationToSave)
+            AlarmScheduler.cancelRenewal(this, medicationToSave)
+        } else {
+            medicationToSave = Medication(
+                id = "",
+                name = name,
+                startTimeMillis = startTime,
+                intervalMinutes = intervalMinutes,
+                durationDays = durationDays,
+                renewalDateMillis = renewalDate
+            )
+        }
+
+        MedicationStorage.save(medicationToSave, profileIdForMedication) { success ->
+            if (success) {
+                AlarmScheduler.schedule(this, medicationToSave)
+                if (renewalDate != null) {
+                    AlarmScheduler.scheduleRenewal(this, medicationToSave)
                 }
+                Toast.makeText(this, "Tratamento salvo!", Toast.LENGTH_SHORT).show()
+                finish()
             } else {
-                val newMed = Medication(
-                    name = name,
-                    startTimeMillis = chosenTime,
-                    intervalMinutes = interval
-                )
-                meds.add(newMed)
-                MedicationStorage.save(this, meds)
-                AlarmScheduler.schedule(this, newMed)
+                Toast.makeText(this, "Erro ao salvar tratamento.", Toast.LENGTH_SHORT).show()
             }
-            finish()
+        }
+    }
+
+    private fun loadEditingMedicationData() {
+        editingMedId = intent.getStringExtra("medId")
+        if (editingMedId == null) return
+
+        MedicationStorage.load(profileIdForMedication) { meds ->
+            val med = meds.find { it.id == editingMedId }
+            if (med != null) {
+                medicationBeingEdited = med
+
+                val etName = findViewById<EditText>(R.id.etName)
+                val etInterval = findViewById<EditText>(R.id.etInterval)
+                val etDuration = findViewById<EditText>(R.id.etDuration)
+                val tvStartDate = findViewById<TextView>(R.id.tvStartDate)
+                val cbRenew = findViewById<CheckBox>(R.id.cbRenew)
+                val tvRenewDate = findViewById<TextView>(R.id.tvRenewDate)
+                val rgDuration = findViewById<RadioGroup>(R.id.rgDuration)
+
+                etName.setText(med.name)
+                etInterval.setText((med.intervalMinutes / 60).toString())
+
+                if (med.durationDays != null) {
+                    rgDuration.check(R.id.rbWithEndDate)
+                    etDuration.setText(med.durationDays.toString())
+                } else {
+                    rgDuration.check(R.id.rbIndeterminate)
+                }
+
+                med.renewalDateMillis?.let { renewalMillis ->
+                    cbRenew.isChecked = true
+                    chosenRenewTime.timeInMillis = renewalMillis
+                    val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                    tvRenewDate.text = String.format("Renovar em: %s", sdf.format(chosenRenewTime.time))
+                    tvRenewDate.setTextColor(resources.getColor(android.R.color.black, null))
+                }
+
+                chosenTime.timeInMillis = med.startTimeMillis
+                val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                tvStartDate.text = String.format("Início: %s", sdf.format(chosenTime.time))
+                tvStartDate.setTextColor(resources.getColor(android.R.color.black, null))
+            }
         }
     }
 }

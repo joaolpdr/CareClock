@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">CareClock</string>
     <string name="default_web_client_id" translatable="false">420551570103-padjl0gtco7eg8cmhl0cs52i4j7ls4dl.apps.googleusercontent.com</string>
+    <string name="title_activity_register">RegisterActivity</string>
+    <string name="title_activity_profile">ProfileActivity</string>
+    <string name="title_activity_add_dependent">AddDependentActivity</string>
 </resources>

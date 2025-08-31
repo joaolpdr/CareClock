@@ -7,6 +7,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -47,6 +48,13 @@ class LoginActivity : AppCompatActivity() {
 
         auth = Firebase.auth
 
+        // Verifica se o utilizador já está logado
+        if (auth.currentUser != null) {
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+            return
+        }
+
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
@@ -56,22 +64,45 @@ class LoginActivity : AppCompatActivity() {
 
         val emailEt = findViewById<EditText>(R.id.etEmail)
         val passEt = findViewById<EditText>(R.id.etPassword)
-        val btn = findViewById<Button>(R.id.btnLogin)
+        val btnLogin = findViewById<Button>(R.id.btnLogin)
         val googleLoginButton = findViewById<ImageView>(R.id.ivGoogle)
+        val registerTv = findViewById<TextView>(R.id.tvRegister)
 
-        btn.setOnClickListener {
+        // LÓGICA DE LOGIN CORRIGIDA
+        btnLogin.setOnClickListener {
             val email = emailEt.text.toString().trim()
-            if (email.isNotEmpty()) {
-                startActivity(Intent(this, MainActivity::class.java))
-                finish()
-            } else {
-                emailEt.error = "Informe um e-mail"
+            val password = passEt.text.toString().trim()
+
+            if (email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(this, "Por favor, preencha o e-mail e a senha.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
+
+            auth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        // Login bem-sucedido, navega para a MainActivity
+                        Log.d("LoginActivity", "signInWithEmail:success")
+                        startActivity(Intent(this, MainActivity::class.java))
+                        finish()
+                    } else {
+                        // Se o login falhar, mostra uma mensagem de erro
+                        Log.w("LoginActivity", "signInWithEmail:failure", task.exception)
+                        Toast.makeText(
+                            baseContext, "Autenticação falhou. Verifique suas credenciais.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
         }
 
         googleLoginButton.setOnClickListener {
             Log.d("LoginActivity", "Botão do Google foi clicado!")
             signInWithGoogle()
+        }
+
+        registerTv.setOnClickListener {
+            startActivity(Intent(this, RegisterActivity::class.java))
         }
     }
 
