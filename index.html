@@ -1,168 +1,469 @@
-<!DOCTYPE html>
+<!-- Salve como index.html e coloque /assets/screens/*.png conforme indicado abaixo -->
+<!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CareClock - Simplifique seu tratamento</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CareClock — Gerenciamento de Tratamentos</title>
+  <meta name="description" content="CareClock — app Android em Kotlin para gerenciamento de tratamentos. Protótipo, features e tecnologias." />
+
+  <!-- Fonte (Google Fonts) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
   <style>
-    :root {
-      --primary: #6a5acd;
-      --secondary: #f5f5f5;
-      --text: #333;
-      --accent: #9370db;
+    :root{
+      --bg:#f6f6f7;
+      --card:#fff;
+      --primary:#1e2bff;   /* blue logo */
+      --accent:#27d327;    /* green buttons */
+      --soft:#f3e9e9;      /* rosa claro input */
+      --text:#111;
+      --muted:#6c6c75;
+      --radius:14px;
+      --glass: rgba(255,255,255,0.7);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial;
+      background:linear-gradient(180deg,var(--bg),#ffffff);
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.4;
     }
 
-    body {
-      margin: 0;
-      font-family: 'Poppins', sans-serif;
-      background-color: var(--secondary);
-      color: var(--text);
-      line-height: 1.6;
+    /* container */
+    .wrap{
+      max-width:1100px;
+      margin:40px auto;
+      padding:20px;
+      display:grid;
+      grid-template-columns: 1fr 420px;
+      gap:28px;
     }
 
-    header {
-      background: var(--primary);
-      color: white;
-      text-align: center;
-      padding: 2rem 1rem;
+    /* left column (content) */
+    header.site{
+      grid-column:1 / span 1;
+      background:var(--card);
+      padding:28px;
+      border-radius:var(--radius);
+      box-shadow:0 8px 30px rgba(20,20,30,0.06);
+    }
+    header.site .brand{
+      display:flex;align-items:center;gap:16px;
+    }
+    .logo{
+      width:74px;height:74px;
+      border-radius:18px;
+      background:linear-gradient(135deg,#2b7cff,#7bb7ff);
+      display:flex;align-items:center;justify-content:center;color:white;
+      font-weight:800;font-size:22px;box-shadow:0 6px 18px rgba(40,80,200,0.12);
+    }
+    header.site h1{
+      margin:0;font-size:22px;
+      letter-spacing:-0.4px;
+    }
+    header.site p.lead{margin:8px 0 0;color:var(--muted);font-size:14px}
+
+    /* features carousel */
+    .carousel{
+      margin-top:22px;
+      position:relative;
+      overflow:hidden;
+      border-radius:12px;
+      background: linear-gradient(180deg,#ffffff, #fbfbfc);
+      padding:18px;
+    }
+    .slides{display:flex;gap:18px;transition:transform .5s cubic-bezier(.2,.9,.25,1);}
+    .slide{
+      min-width:100%;
+      flex:0 0 100%;
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:12px;
+      align-items:start;
+    }
+    .feature-card{
+      background:var(--card);
+      padding:16px;border-radius:12px;
+      box-shadow:0 6px 20px rgba(10,10,20,0.04);
+      display:flex;gap:12px;align-items:flex-start;
+    }
+    .feature-card .dot{
+      width:46px;height:46px;border-radius:10px;background:var(--soft);
+      display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--primary)
+    }
+    .feature-card h3{margin:0;font-size:16px}
+    .feature-card p{margin:6px 0 0;color:var(--muted);font-size:14px}
+
+    .carousel .controls{
+      position:absolute;right:12px;top:12px;display:flex;gap:8px;
+    }
+    .btn {
+      border:0;padding:8px 12px;border-radius:10px;background:var(--glass);cursor:pointer;
+      box-shadow:0 2px 8px rgba(20,20,30,0.05)
     }
 
-    header h1 {
-      margin: 0;
-      font-size: 2.2rem;
+    /* dots */
+    .dots{display:flex;gap:8px;justify-content:center;margin-top:12px}
+    .dot-ind{width:8px;height:8px;border-radius:99px;background:#e7e7ea}
+
+    /* right column (phone demo) */
+    .panel{
+      background:linear-gradient(180deg,#fff,#fbfdff);
+      border-radius:var(--radius);
+      padding:18px;
+      box-shadow:0 8px 30px rgba(20,20,30,0.06);
+      display:flex;flex-direction:column;align-items:center;gap:14px;
     }
 
-    header p {
-      margin-top: 0.5rem;
-      font-size: 1.1rem;
-      opacity: 0.9;
+    /* phone mockup */
+    .phone-wrap{
+      width:320px;height:640px;border-radius:36px;
+      background:linear-gradient(180deg,#fff,#f8faff);
+      border:8px solid #0e0e0e03; display:flex;align-items:center;justify-content:center;
+      position:relative;overflow:hidden;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.6);
+    }
+    .phone-notch{ position:absolute;top:8px;left:50%;transform:translateX(-50%);width:90px;height:22px;background:#1110;border-radius:8px;opacity:.05}
+
+    /* screen area where "screens" change */
+    .phone-screen{
+      width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+      padding:28px;
+      transition:transform .6s cubic-bezier(.2,.9,.25,1), opacity .5s;
+    }
+    .mock-screen{
+      width:100%;height:100%;border-radius:28px;background:#fff;overflow:hidden;
+      display:flex;flex-direction:column;align-items:stretch;
+      box-shadow:inset 0 2px 0 rgba(0,0,0,0.03);
+      padding:18px;
     }
 
-    main {
-      max-width: 900px;
-      margin: 2rem auto;
-      padding: 0 1rem;
+    /* We'll use images to represent screens */
+    .mock-screen img{width:100%;height:auto;border-radius:14px;display:block;object-fit:cover}
+
+    /* autoplay indicators below phone */
+    .phone-actions{display:flex;gap:10px;align-items:center;}
+    .phone-actions button{border:0;padding:8px 12px;border-radius:10px;background:var(--glass);cursor:pointer}
+
+    /* technologies marquee / esteira */
+    .tech-strip{
+      margin-top:14px;
+      width:100%;
+      overflow:hidden;
+      border-radius:12px;
+      background:linear-gradient(90deg,#ffffff,#fbfbfe);
+      padding:8px;
+      display:flex;align-items:center;
+    }
+    .marquee{
+      display:flex;gap:20px;align-items:center;
+      animation:marq 18s linear infinite;
+    }
+    .tech{
+      display:flex;gap:8px;align-items:center;padding:8px 12px;border-radius:999px;
+      background:var(--soft);font-weight:600;color:var(--muted);font-size:14px;
+      box-shadow: 0 4px 14px rgba(30,40,60,0.03);
+    }
+    @keyframes marq{
+      0%{transform:translateX(0)}
+      100%{transform:translateX(-50%)}
     }
 
-    section {
-      margin-bottom: 3rem;
-      background: white;
-      padding: 2rem;
-      border-radius: 15px;
-      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    /* section: about + ctas */
+    .about{
+      margin-top:18px;padding:16px;background:var(--card);border-radius:12px;
+    }
+    .cta{
+      display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;
+    }
+    .primary{
+      background:var(--accent);color:white;padding:12px 16px;border-radius:12px;border:0;font-weight:700;cursor:pointer;
+      box-shadow:0 8px 24px rgba(40,180,40,0.12)
+    }
+    .secondary{background:transparent;border:1px solid #e6e6ee;padding:10px 14px;border-radius:10px;color:var(--muted);cursor:pointer}
+
+    footer.site{
+      margin-top:18px;text-align:center;color:var(--muted);font-size:13px;padding:10px 0;
     }
 
-    h2 {
-      color: var(--primary);
-      margin-bottom: 1rem;
+    /* responsive */
+    @media (max-width:1024px){
+      .wrap{grid-template-columns: 1fr; padding:16px}
+      .panel{order:-1}
+      .phone-wrap{width:300px;height:580px}
     }
-
-    ul {
-      list-style: none;
-      padding: 0;
-    }
-
-    li::before {
-      content: "✔️";
-      margin-right: 8px;
-      color: var(--accent);
-    }
-
-    a.button {
-      display: inline-block;
-      background: var(--primary);
-      color: white;
-      padding: 0.8rem 1.5rem;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: bold;
-      transition: background 0.3s;
-    }
-
-    a.button:hover {
-      background: var(--accent);
-    }
-
-    footer {
-      text-align: center;
-      padding: 1rem;
-      background: var(--primary);
-      color: white;
-    }
-
-    img {
-      max-width: 100%;
-      border-radius: 10px;
-      margin-top: 1rem;
-    }
-
-    .links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      justify-content: center;
-      margin-top: 1rem;
-    }
-
-    @media (max-width: 600px) {
-      header h1 {
-        font-size: 1.8rem;
-      }
+    @media (max-width:420px){
+      .phone-wrap{width:240px;height:480px}
+      .wrap{margin:18px auto}
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>CareClock</h1>
-    <p>Gerencie seu tratamento de forma simples, humana e eficiente.</p>
-  </header>
+  <div class="wrap">
+    <!-- left content -->
+    <div>
+      <header class="site">
+        <div class="brand">
+          <div class="logo">CC</div>
+          <div>
+            <h1>CareClock</h1>
+            <p class="lead">App Android (Kotlin) para gerenciar tratamentos — lembretes, dependentes e recomendações.</p>
+          </div>
+        </div>
 
-  <main>
-    <section>
-      <h2>🩺 Sobre o Projeto</h2>
-      <p>
-        O CareClock é um aplicativo Android desenvolvido para ajudar pacientes e cuidadores a
-        gerenciar horários de medicamentos com notificações inteligentes e acompanhamento de dependentes.
-        O projeto nasceu da dor real de quem precisa conciliar rotina e saúde de forma prática.
-      </p>
-      <img src="https://via.placeholder.com/800x400?text=Mockup+CareClock" alt="Mockup do app CareClock">
-    </section>
+        <!-- carousel -->
+        <div class="carousel" aria-roledescription="carousel" id="carousel">
+          <div class="slides" id="slides">
+            <!-- slide 1 -->
+            <div class="slide">
+              <div class="feature-card">
+                <div class="dot">1</div>
+                <div>
+                  <h3>Discovery & UX</h3>
+                  <p>Pesquisa com usuários, prototipagem em Figma e testes de usabilidade para validar fluxo de cadastro e lembretes.</p>
+                </div>
+              </div>
+              <div class="feature-card">
+                <div class="dot">✓</div>
+                <div>
+                  <h3>Design intuitivo</h3>
+                  <p>Campos arredondados, linguagem acessível e foco em usabilidade para pacientes e cuidadores.</p>
+                </div>
+              </div>
+            </div>
 
-    <section>
-      <h2>✨ Principais Funcionalidades</h2>
-      <ul>
-        <li>Cadastro e agendamento de medicamentos com lembretes automáticos</li>
-        <li>Gestão de dependentes e histórico de uso</li>
-        <li>Design intuitivo e fácil de usar</li>
-        <li>Sincronização via Firebase</li>
-      </ul>
-    </section>
+            <!-- slide 2 -->
+            <div class="slide">
+              <div class="feature-card">
+                <div class="dot">2</div>
+                <div>
+                  <h3>Gerenciamento de Dependentes</h3>
+                  <p>Perfis múltiplos com histórico e controle independente de tratamentos para cada dependente.</p>
+                </div>
+              </div>
+              <div class="feature-card">
+                <div class="dot">🔔</div>
+                <div>
+                  <h3>Notificações inteligentes</h3>
+                  <p>Lembretes com opções de alarme, apenas notificação e alertas de renovação de receita antes do término.</p>
+                </div>
+              </div>
+            </div>
 
-    <section>
-      <h2>🧠 Processo de Desenvolvimento</h2>
-      <p>
-        O desenvolvimento seguiu etapas de <strong>Product Discovery</strong>, com pesquisas de mercado
-        para entender as dores dos usuários, prototipagem em Figma e testes de usabilidade.
-        As features foram priorizadas com base em impacto social e viabilidade técnica.
-      </p>
-      <div class="links">
-        <a href="https://www.figma.com/" target="_blank" class="button">Ver Protótipo no Figma</a>
-        <a href="https://github.com/joaolpdr/CareClock" target="_blank" class="button">Ver Código no GitHub</a>
+            <!-- slide 3 -->
+            <div class="slide">
+              <div class="feature-card">
+                <div class="dot">3</div>
+                <div>
+                  <h3>Integração com Firebase</h3>
+                  <p>Sincronização do estado do usuário, armazenamento e autenticação segura para múltiplos dispositivos.</p>
+                </div>
+              </div>
+              <div class="feature-card">
+                <div class="dot">⚙️</div>
+                <div>
+                  <h3>Arquitetura Android</h3>
+                  <p>Implementado em Kotlin com Views/XML — excelente aprendizado para devs nativos Android.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- controls -->
+          <div class="controls" aria-hidden="true">
+            <button class="btn" id="prev" title="Anterior">◀</button>
+            <button class="btn" id="next" title="Próximo">▶</button>
+          </div>
+
+          <!-- pagination -->
+          <div class="dots" id="dots" aria-hidden="true">
+            <div class="dot-ind" data-i="0"></div>
+            <div class="dot-ind" data-i="1"></div>
+            <div class="dot-ind" data-i="2"></div>
+          </div>
+        </div>
+
+        <!-- tech marquee -->
+        <div class="tech-strip" aria-hidden="true">
+          <div class="marquee" id="marquee">
+            <!-- Repita itens para efeito contínuo -->
+            <div class="tech">Kotlin</div>
+            <div class="tech">Firebase</div>
+            <div class="tech">XML (Android Views)</div>
+            <div class="tech">Git / GitHub</div>
+            <div class="tech">Figma</div>
+            <div class="tech">Java — Interoperabilidade</div>
+            <div class="tech">Kotlin</div>
+            <div class="tech">Firebase</div>
+            <div class="tech">XML (Android Views)</div>
+          </div>
+        </div>
+
+        <div class="about">
+          <strong>Sobre o CareClock</strong>
+          <p style="margin:8px 0 0;color:var(--muted);font-size:14px">
+            CareClock é um app Android em Kotlin para gestão de tratamentos, pensado em pacientes e cuidadores.
+            Implementado com Views/XML e integração Firebase — pensado para ser simples e escalável.
+          </p>
+
+          <div class="cta">
+            <button class="primary" id="openDemo">Ver demo</button>
+            <a class="secondary" href="https://github.com/joaolpdr/CareClock" target="_blank" rel="noopener">Código no GitHub</a>
+            <a class="secondary" href="#" target="_blank">Protótipo Figma</a>
+          </div>
+        </div>
+
+        <footer class="site">Desenvolvido por João Lucas • Kotlin • Firebase • UI/UX</footer>
+      </header>
+    </div>
+
+    <!-- right panel: phone animation -->
+    <aside class="panel" aria-label="Demonstração do app">
+      <div style="text-align:center">
+        <strong>Demo interativo</strong>
+        <div style="color:var(--muted);font-size:13px;margin-top:6px">Simulação do fluxo do app no celular</div>
       </div>
-    </section>
 
-    <section>
-      <h2>📈 Impacto</h2>
-      <p>
-        O CareClock busca aumentar a adesão ao tratamento medicamentoso e reduzir falhas de medicação
-        causadas por esquecimento ou desorganização. O projeto destaca a importância de unir tecnologia
-        e empatia na área da saúde.
-      </p>
-    </section>
-  </main>
+      <div class="phone-wrap" role="img" aria-label="Mockup do CareClock com animação">
+        <div class="phone-notch"></div>
 
-  <footer>
-    <p>Desenvolvido por João Lucas Prado Ribeiro © 2025</p>
-  </footer>
+        <!-- screens container -->
+        <div class="phone-screen" id="phoneScreen">
+          <div class="mock-screen" id="ms-0">
+            <!-- Troque por prints reais. Recomendado: /assets/screens/1.png -->
+            <img src="assets/screens/1.png" alt="Tela: cadastro CareClock">
+          </div>
+          <div class="mock-screen" id="ms-1" style="display:none">
+            <img src="assets/screens/2.png" alt="Tela: lista de tratamentos">
+          </div>
+          <div class="mock-screen" id="ms-2" style="display:none">
+            <img src="assets/screens/3.png" alt="Tela: sugestão de medicamentos">
+          </div>
+          <div class="mock-screen" id="ms-3" style="display:none">
+            <img src="assets/screens/4.png" alt="Tela: perfil / dependentes">
+          </div>
+        </div>
+      </div>
+
+      <div class="phone-actions" style="justify-content:center">
+        <button id="play" class="btn">▶ Play</button>
+        <button id="pause" class="btn">⏸ Pause</button>
+        <div style="font-size:13px;color:var(--muted)">Auto-play: <span id="status">ON</span></div>
+      </div>
+
+      <div style="font-size:13px;color:var(--muted);margin-top:8px;text-align:center">
+        Dica: substitua as imagens dentro de <code>/assets/screens/</code> pelos prints do app.
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    /* ---------- CAROUSEL ---------- */
+    (function(){
+      const slides = document.getElementById('slides');
+      const next = document.getElementById('next');
+      const prev = document.getElementById('prev');
+      const dots = Array.from(document.querySelectorAll('.dot-ind'));
+      const total = slides.children.length;
+      let index = 0;
+      let timer = null;
+
+      function update(){
+        slides.style.transform = `translateX(-${index * 100}%)`;
+        dots.forEach(d => d.style.background = '#e7e7ea');
+        const active = dots[index];
+        if(active) active.style.background = 'var(--accent)';
+      }
+
+      function nextSlide(){
+        index = (index + 1) % total;
+        update();
+      }
+      function prevSlide(){
+        index = (index - 1 + total) % total;
+        update();
+      }
+
+      next.addEventListener('click', ()=>{ nextSlide(); resetTimer(); });
+      prev.addEventListener('click', ()=>{ prevSlide(); resetTimer(); });
+      dots.forEach(d=> d.addEventListener('click', (e)=>{ index = Number(e.target.dataset.i); update(); resetTimer(); }));
+
+      function startTimer(){ timer = setInterval(nextSlide, 4500); }
+      function resetTimer(){ clearInterval(timer); startTimer(); }
+      startTimer();
+      update();
+    })();
+
+    /* ---------- PHONE MOCK ANIMATION ---------- */
+    (function(){
+      const screens = Array.from(document.querySelectorAll('.mock-screen'));
+      let cur = 0;
+      let playing = true;
+      let phoneTimer = null;
+      const status = document.getElementById('status');
+      const playBtn = document.getElementById('play');
+      const pauseBtn = document.getElementById('pause');
+
+      function showScreen(i){
+        screens.forEach((s, idx)=>{
+          if(idx===i){
+            s.style.display = 'flex';
+            s.style.opacity = '0';
+            s.style.transform = 'translateY(8px)';
+            requestAnimationFrame(()=>{ s.style.transition='opacity .5s, transform .5s'; s.style.opacity='1'; s.style.transform='translateY(0)'; })
+          } else {
+            s.style.display = 'none';
+            s.style.transition='';
+          }
+        })
+      }
+
+      function next(){
+        cur = (cur + 1) % screens.length;
+        showScreen(cur);
+      }
+
+      function start(){
+        clearInterval(phoneTimer);
+        phoneTimer = setInterval(next, 3200);
+        playing = true; status.textContent='ON';
+      }
+      function stop(){
+        clearInterval(phoneTimer);
+        playing = false; status.textContent='OFF';
+      }
+
+      playBtn.addEventListener('click', ()=>{ start(); });
+      pauseBtn.addEventListener('click', ()=>{ stop(); });
+
+      // open demo button scrolls to phone
+      document.getElementById('openDemo').addEventListener('click', ()=> {
+        document.querySelector('.panel').scrollIntoView({behavior:'smooth'});
+      });
+
+      // start autoplay
+      showScreen(0);
+      start();
+    })();
+
+    /* ---------- SMALL ACCESSIBILITY + FALLBACK ---------- */
+    // If assets missing, replace with gradient placeholders
+    (function(){
+      const imgs = document.querySelectorAll('.mock-screen img');
+      imgs.forEach(img=>{
+        img.onerror = function(){
+          this.style.display='none';
+          const parent = this.parentElement;
+          parent.style.background = 'linear-gradient(180deg,#f5f8ff,#fff)';
+          parent.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted);font-weight:600">Imagem não encontrada<br><small style="font-weight:400">/assets/screens/1.png</small></div>';
+        }
+      })
+    })();
+  </script>
 </body>
 </html>
