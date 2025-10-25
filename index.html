@@ -1,22 +1,168 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CareClock - Gerencie seu tratamento com facilidade</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CareClock - Simplifique seu tratamento</title>
+  <style>
+    :root {
+      --primary: #6a5acd;
+      --secondary: #f5f5f5;
+      --text: #333;
+      --accent: #9370db;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--secondary);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    header {
+      background: var(--primary);
+      color: white;
+      text-align: center;
+      padding: 2rem 1rem;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2.2rem;
+    }
+
+    header p {
+      margin-top: 0.5rem;
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    section {
+      margin-bottom: 3rem;
+      background: white;
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      color: var(--primary);
+      margin-bottom: 1rem;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li::before {
+      content: "✔️";
+      margin-right: 8px;
+      color: var(--accent);
+    }
+
+    a.button {
+      display: inline-block;
+      background: var(--primary);
+      color: white;
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    a.button:hover {
+      background: var(--accent);
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background: var(--primary);
+      color: white;
+    }
+
+    img {
+      max-width: 100%;
+      border-radius: 10px;
+      margin-top: 1rem;
+    }
+
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
 </head>
-<body style="font-family: Arial; text-align: center; margin: 40px;">
-  <h1>CareClock</h1>
-  <p>Aplicativo Android para ajudar pacientes e cuidadores a gerenciar medicamentos de forma simples.</p>
-  <h2>✨ Principais recursos</h2>
-  <ul style="text-align: left; display: inline-block;">
-    <li>Cadastro de medicamentos e notificações automáticas</li>
-    <li>Gestão de dependentes</li>
-    <li>Interface intuitiva e acessível</li>
-  </ul>
-  <h2>📱 Protótipo</h2>
-  <p><a href="https://www.figma.com/..." target="_blank">Veja o protótipo no Figma</a></p>
-  <h2>📂 Código-fonte</h2>
-  <p><a href="https://github.com/joaolpdr/CareClock" target="_blank">Repositório no GitHub</a></p>
+<body>
+  <header>
+    <h1>CareClock</h1>
+    <p>Gerencie seu tratamento de forma simples, humana e eficiente.</p>
+  </header>
+
+  <main>
+    <section>
+      <h2>🩺 Sobre o Projeto</h2>
+      <p>
+        O CareClock é um aplicativo Android desenvolvido para ajudar pacientes e cuidadores a
+        gerenciar horários de medicamentos com notificações inteligentes e acompanhamento de dependentes.
+        O projeto nasceu da dor real de quem precisa conciliar rotina e saúde de forma prática.
+      </p>
+      <img src="https://via.placeholder.com/800x400?text=Mockup+CareClock" alt="Mockup do app CareClock">
+    </section>
+
+    <section>
+      <h2>✨ Principais Funcionalidades</h2>
+      <ul>
+        <li>Cadastro e agendamento de medicamentos com lembretes automáticos</li>
+        <li>Gestão de dependentes e histórico de uso</li>
+        <li>Design intuitivo e fácil de usar</li>
+        <li>Sincronização via Firebase</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>🧠 Processo de Desenvolvimento</h2>
+      <p>
+        O desenvolvimento seguiu etapas de <strong>Product Discovery</strong>, com pesquisas de mercado
+        para entender as dores dos usuários, prototipagem em Figma e testes de usabilidade.
+        As features foram priorizadas com base em impacto social e viabilidade técnica.
+      </p>
+      <div class="links">
+        <a href="https://www.figma.com/" target="_blank" class="button">Ver Protótipo no Figma</a>
+        <a href="https://github.com/joaolpdr/CareClock" target="_blank" class="button">Ver Código no GitHub</a>
+      </div>
+    </section>
+
+    <section>
+      <h2>📈 Impacto</h2>
+      <p>
+        O CareClock busca aumentar a adesão ao tratamento medicamentoso e reduzir falhas de medicação
+        causadas por esquecimento ou desorganização. O projeto destaca a importância de unir tecnologia
+        e empatia na área da saúde.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    <p>Desenvolvido por João Lucas Prado Ribeiro © 2025</p>
+  </footer>
 </body>
 </html>
