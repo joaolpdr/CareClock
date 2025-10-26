@@ -4,245 +4,269 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>CareClock — Gerenciamento de Tratamentos</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
-  <meta name="description" content="CareClock — app Android em Kotlin para gerenciamento de tratamentos. Protótipo, features e tecnologias." />
 
+  <meta name="description" content="CareClock — app Android em Kotlin para gerenciamento de tratamentos. Protótipo, features e tecnologias." />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 
   <style>
-    :root{
+    :root {
       --bg:#f6f6f7;
       --card:#fff;
-      --primary:#1e2bff;   /* blue logo */
-      --accent:#27d327;    /* green buttons */
-      --soft:#f3e9e9;      /* rosa claro input */
+      --primary:#1e2bff; /* azul logo */
+      --accent:#27d327;
+      --soft:#f3e9e9;
       --text:#111;
       --muted:#6c6c75;
       --radius:14px;
-      --glass: rgba(255,255,255,0.7);
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-   body{
-      margin:0;
-      font-family:Inter,system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial;
-      background:linear-gradient(180deg,var(--bg),#ffffff);
-      color:var(--text);
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      line-height:1.4;
-      overflow-x: hidden; 
     }
 
-    /* container */
-    .wrap{
-      max-width:1100px;
-      margin:40px auto;
-      padding:20px;
-      display:grid;
+    * { box-sizing: border-box; }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: "Inter", system-ui, Segoe UI, Roboto, "Helvetica Neue", Arial;
+      background: linear-gradient(180deg, var(--bg), #ffffff);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* Layout principal */
+    .wrap {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 20px;
+      display: grid;
       grid-template-columns: minmax(450px, 1fr) 340px;
-      gap:28px;
+      gap: 28px;
     }
 
-    /* left column (content) */
-    header.site{
-      grid-column:1 / span 1;
-      background:var(--card);
-      padding:28px;
-      border-radius:var(--radius);
-      box-shadow:0 8px 30px rgba(20,20,30,0.06);
+    header.site {
+      background: var(--card);
+      padding: 28px;
+      border-radius: var(--radius);
+      box-shadow: 0 8px 30px rgba(20, 20, 30, 0.06);
     }
-    header.site .brand{
-      display:flex;align-items:center;gap:16px;
+
+    /* Branding */
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 16px;
     }
-    
-    /* * CSS ATUALIZADO (LOGO MENOR - DESKTOP) */
-    .logo{
-      width:60px;height:60px; /* <-- Reduzido */
-      border-radius:14px; /* <-- Ajustado */
-      background:linear-gradient(135deg,#2b7cff,#7bb7ff);
-      display:flex;align-items:center;justify-content:center;color:white;
-      font-weight:800;font-size:18px; /* Reduzido de 22px */
-      box-shadow:0 6px 18px rgba(40,80,200,0.12);
-      padding: 0; 
-      overflow: hidden; 
-      flex-shrink: 0; /* Impede que o logo encolha */
+
+    .logo {
+      width: 60px;
+      height: 60px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #2b7cff, #7bb7ff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 800;
+      font-size: 18px;
+      box-shadow: 0 6px 18px rgba(40, 80, 200, 0.12);
+      flex-shrink: 0;
+      overflow: hidden;
     }
 
     .logo img {
       width: 100%;
       height: 100%;
-      object-fit: cover; 
+      object-fit: cover;
     }
 
-    header.site h1{
-      margin:0;font-size:22px;
-      letter-spacing:-0.4px;
+    header.site h1 {
+      margin: 0;
+      font-size: 22px;
     }
-    header.site p.lead{margin:8px 0 0;color:var(--muted);font-size:14px}
 
-    /* features carousel */
-    .carousel{
-      margin-top:22px;
-      position:relative;
-      overflow:hidden;
-      border-radius:12px;
-      background: linear-gradient(180deg,#ffffff, #fbfbfc);
-      padding:18px;
+    header.site p.lead {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 14px;
     }
-    .slides{display:flex;gap:18px;transition:transform .5s cubic-bezier(.2,.9,.25,1);}
-    .slide{
-      min-width:100%;
-      flex:0 0 100%;
-      display:grid;
-      grid-template-columns: 1fr;
-      gap:12px;
-      align-items:start;
+
+    /* Features em grid */
+    .features-grid {
+      margin-top: 22px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 12px;
     }
-    .feature-card{
-      background:var(--card);
-      padding:16px;border-radius:12px;
-      box-shadow:0 6px 20px rgba(10,10,20,0.04);
-      display:flex;gap:12px;align-items:flex-start;
+
+    .feature-card {
+      background: var(--card);
+      padding: 16px;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(10, 10, 20, 0.04);
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
     }
-    .feature-card .dot{
-      width:46px;height:46px;border-radius:10px;background:var(--soft);
-      display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--primary);
+
+    .feature-card .dot {
+      width: 46px;
+      height: 46px;
+      border-radius: 10px;
+      background: var(--soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: var(--primary);
       flex-shrink: 0;
     }
-    .feature-card h3{margin:0;font-size:16px}
-    .feature-card p{margin:6px 0 0;color:var(--muted);font-size:14px}
 
-    .carousel .controls{
-      position:absolute;right:12px;top:12px;display:flex;gap:8px;
-    }
-    .btn {
-      border:0;padding:8px 12px;border-radius:10px;background:var(--glass);cursor:pointer;
-      box-shadow:0 2px 8px rgba(20,20,30,0.05)
+    .feature-card h3 {
+      margin: 0;
+      font-size: 16px;
     }
 
-    /* dots */
-    .dots{display:flex;gap:8px;justify-content:center;margin-top:12px}
-    .dot-ind{width:8px;height:8px;border-radius:99px;background:#e7e7ea}
+    .feature-card p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
 
-    /* right column (phone demo) */
-    .panel{
-      background:linear-gradient(180deg,#fff,#fbfdff);
-      border-radius:var(--radius);
-      padding:18px;
-      box-shadow:0 8px 30px rgba(20,20,30,0.06);
-      display:flex;flex-direction:column;align-items:center;gap:14px;
+    /* Painel lateral (protótipo) */
+    .panel {
+      background: linear-gradient(180deg, #fff, #fbfdff);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: 0 8px 30px rgba(20, 20, 30, 0.06);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
       position: sticky;
       top: 40px;
     }
 
-    /* Container do Figma (sem o celular) */
-    .mock-screen{
-      width:100%;
-      height: 560px; /* Altura do protótipo no desktop */
-      border-radius:28px;
-      background:#fff;
-      overflow:hidden;
-      display:flex;flex-direction:column;align-items:stretch;
-      box-shadow: 0 8px 30px rgba(20,20,30,0.06);
+    .mock-screen {
+      width: 100%;
+      height: 560px;
+      border-radius: 28px;
+      background: #fff;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      box-shadow: 0 8px 30px rgba(20, 20, 30, 0.06);
     }
 
-    /* technologies marquee / esteira */
-    .tech-strip{
-      margin-top:18px;
-      width:100%;
-      overflow:hidden;
-      border-radius:12px;
-      background:linear-gradient(90deg,#ffffff,#fbfbfe);
-      padding:8px;
-      display:flex;align-items:center;
-      box-shadow:0 8px 30px rgba(20,20,30,0.06);
-    }
-    .marquee{
-      display:flex;gap:20px;align-items:center;
-      animation:marq 18s linear infinite;
-    }
-    .tech{
-      display:flex;gap:8px;align-items:center;padding:8px 12px;border-radius:999px;
-      background:var(--soft);font-weight:600;color:var(--muted);font-size:14px;
-      box-shadow: 0 4px 14px rgba(30,40,60,0.03);
-    }
-    @keyframes marq{
-      0%{transform:translateX(0)}
-      100%{transform:translateX(-50%)}
+    /* Tecnologias */
+    .tech-grid {
+      margin-top: 18px;
+      padding: 16px;
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: 0 8px 30px rgba(20, 20, 30, 0.06);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
     }
 
-    /* section: about + ctas */
-    .about{
-      margin-top:18px;padding:16px;background:var(--card);border-radius:12px;
-      box-shadow:0 8px 30px rgba(20,20,30,0.06);
+    .tech {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: var(--soft);
+      font-weight: 600;
+      color: var(--muted);
+      font-size: 14px;
+      box-shadow: 0 4px 14px rgba(30, 40, 60, 0.03);
     }
-    .cta{
-      display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;
-    }
-    .primary{
-      background:var(--accent);color:white;padding:12px 16px;border-radius:12px;border:0;font-weight:700;cursor:pointer;
-      box-shadow:0 8px 24px rgba(40,180,40,0.12)
-    }
-    .secondary{background:transparent;border:1px solid #e6e6ee;padding:10px 14px;border-radius:10px;color:var(--muted);cursor:pointer; text-decoration: none;}
 
-    footer.site{
-      text-align:center;
-      color:var(--muted);
-      font-size:13px;
-      max-width: 1100px; 
-      margin: 0 auto 40px auto;
+    /* Sobre e LinkedIn */
+    .about {
+      margin-top: 18px;
+      padding: 16px;
+      background: var(--card);
+      border-radius: 12px;
+      box-shadow: 0 8px 30px rgba(20, 20, 30, 0.06);
+    }
+
+    .cta {
+      display: flex;
+      gap: 10px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    .linkedin-link {
+      color: var(--primary);
+      font-weight: 700;
+      border: 1px solid var(--primary);
+      padding: 10px 16px;
+      border-radius: 12px;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+
+    .linkedin-link:hover {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    footer.site {
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      max-width: 1100px;
+      margin: 0 auto 40px;
       padding: 10px 20px;
     }
 
-    /* responsive */
-    @media (max-width:1024px){
-      .wrap{
-        grid-template-columns: 1fr; 
-        padding:16px;
+    /* Responsividade */
+    @media (max-width: 1024px) {
+      .wrap {
+        grid-template-columns: 1fr;
+        padding: 16px;
         margin: 20px auto;
-        grid-template-columns: 1fr; 
       }
-      .panel{
-        order:-1; 
+      .panel {
+        order: -1;
         position: static;
       }
-      
-      .mock-screen{
-        width: 100%; 
-        max-width: 360px; 
+      .mock-screen {
+        max-width: 360px;
         margin: 0 auto;
-        height: auto; 
+        height: auto;
         aspect-ratio: 9 / 16;
         border-radius: 20px;
       }
     }
 
-    /* * CSS ATUALIZADO (LOGO MENOR - MOBILE) */
-    @media (max-width: 600px){
-      .brand{
+    @media (max-width: 600px) {
+      .brand {
         flex-direction: column;
         align-items: flex-start;
         gap: 12px;
       }
-      .logo{
-        width: 50px; /* <-- Reduzido */
-        height: 50px; /* <-- Reduzido */
-        font-size: 16px; /* <-- Ajustado */
-        border-radius: 12px; /* <-- Ajustado */
+      .logo {
+        width: 50px;
+        height: 50px;
+        font-size: 16px;
+        border-radius: 12px;
       }
-      header.site h1{
+      header.site h1 {
         font-size: 20px;
       }
-      .feature-card{
+      .feature-card {
         flex-direction: column;
         align-items: flex-start;
       }
-      .feature-card .dot{
+      .feature-card .dot {
         width: 40px;
         height: 40px;
       }
-      .cta{
+      .cta {
         flex-direction: column;
       }
       .cta > * {
@@ -252,8 +276,10 @@
     }
   </style>
 </head>
+
 <body>
   <div class="wrap">
+    <!-- Coluna principal -->
     <div>
       <header class="site">
         <div class="brand">
@@ -266,215 +292,54 @@
           </div>
         </div>
 
-        <div class="carousel" aria-roledescription="carousel" id="carousel">
-          <div class="slides" id="slides">
-            <div class="slide">
-              <div class="feature-card">
-                <div class="dot">1</div>
-                <div>
-                  <h3>Discovery & UX</h3>
-                  <p>Pesquisa com usuários, prototipagem em Figma e testes de usabilidade para validar fluxo de cadastro e lembretes.</p>
-                </div>
-              </div>
-              <div class="feature-card">
-                <div class="dot">✓</div>
-                <div>
-                  <h3>Design intuitivo</h3>
-                  <p>Campos arredondados, linguagem acessível e foco em usabilidade para pacientes e cuidadores.</p>
-                </div>
-              </div>
-            </div>
-
-            <div class="slide">
-              <div class="feature-card">
-                <div class="dot">2</div>
-                <div>
-                  <h3>Gerenciamento de Dependentes</h3>
-                  <p>Perfis múltiplos com histórico e controle independente de tratamentos para cada dependente.</p>
-                </div>
-              </div>
-              <div class="feature-card">
-                <div class="dot">🔔</div>
-                <div>
-                  <h3>Notificações inteligentes</h3>
-                  <p>Lembretes com opções de alarme, apenas notificação e alertas de renovação de receita antes do término.</p>
-                </div>
-              </div>
-            </div>
-
-            <div class="slide">
-              <div class="feature-card">
-                <div class="dot">3</div>
-                <div>
-                  <h3>Integração com Firebase</h3>
-                  <p>Sincronização do estado do usuário, armazenamento e autenticação segura para múltiplos dispositivos.</p>
-                </div>
-              </div>
-              <div class="feature-card">
-                <div class="dot">⚙️</div>
-                <div>
-                  <h3>Arquitetura Android</h3>
-                  <p>Implementado em Kotlin com Views/XML — excelente aprendizado para devs nativos Android.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="controls" aria-hidden="true">
-            <button class="btn" id="prev" title="Anterior">◀</button>
-            <button class="btn" id="next" title="Próximo">▶</button>
-          </div>
-
-          <div class="dots" id="dots" aria-hidden="true">
-            <div class="dot-ind" data-i="0"></div>
-            <div class="dot-ind" data-i="1"></div>
-            <div class="dot-ind" data-i="2"></div>
-          </div>
+        <!-- Features -->
+        <div class="features-grid">
+          <div class="feature-card"><div class="dot">1</div><div><h3>Discovery & UX</h3><p>Pesquisa com usuários, prototipagem em Figma e testes de usabilidade.</p></div></div>
+          <div class="feature-card"><div class="dot">✓</div><div><h3>Design intuitivo</h3><p>Campos arredondados e linguagem acessível para pacientes e cuidadores.</p></div></div>
+          <div class="feature-card"><div class="dot">2</div><div><h3>Gerenciamento de Dependentes</h3><p>Perfis múltiplos com histórico e controle independente de tratamentos.</p></div></div>
+          <div class="feature-card"><div class="dot">🔔</div><div><h3>Notificações inteligentes</h3><p>Alertas automáticos para horários e renovação de receitas.</p></div></div>
+          <div class="feature-card"><div class="dot">3</div><div><h3>Integração com Firebase</h3><p>Autenticação e sincronização seguras em nuvem.</p></div></div>
+          <div class="feature-card"><div class="dot">⚙️</div><div><h3>Arquitetura Android</h3><p>App nativo em Kotlin com Views/XML, ideal para aprendizado.</p></div></div>
         </div>
-      </header> 
-      <div class="tech-strip" aria-hidden="true">
-        <div class="marquee" id="marquee">
-          <div class="tech">
-            <i class="devicon-kotlin-plain colored"></i> Kotlin
-          </div>
-          <div class="tech">
-            <i class="devicon-firebase-plain colored"></i> Firebase
-          </div>
-          <div class="tech">
-            <i class="devicon-android-plain colored"></i> Android
-          </div>
-          <div class="tech">
-            <i class="devicon-figma-plain colored"></i> Figma
-          </div>
-          <div class="tech">
-            <i class="devicon-java-plain colored"></i> Java
-          </div>
-    
-          <div class="tech">
-            <i class="devicon-kotlin-plain colored"></i> Kotlin
-          </div>
-          <div class="tech">
-            <i class="devicon-firebase-plain colored"></i> Firebase
-          </div>
-          <div class="tech">
-            <i class="devicon-android-plain colored"></i> Android
-          </div>
-        </div>
+      </header>
+
+      <!-- Tecnologias -->
+      <div class="tech-grid">
+        <div class="tech"><i class="devicon-kotlin-plain colored"></i> Kotlin</div>
+        <div class="tech"><i class="devicon-firebase-plain colored"></i> Firebase</div>
+        <div class="tech"><i class="devicon-android-plain colored"></i> Android</div>
+        <div class="tech"><i class="devicon-figma-plain colored"></i> Figma</div>
+        <div class="tech"><i class="devicon-java-plain colored"></i> Java</div>
       </div>
 
+      <!-- Sobre -->
       <div class="about">
         <strong>Sobre o CareClock</strong>
         <p style="margin:8px 0 0;color:var(--muted);font-size:14px">
-          CareClock é um app Android em Kotlin para gestão de tratamentos, pensado em pacientes e cuidadores.
-          Implementado com Views/XML e integração Firebase, pensado para ser simples e escalável.
+          CareClock é um app Android em Kotlin para gestão de tratamentos, pensado para pacientes e cuidadores.
         </p>
-
         <div class="cta">
-          <button class="primary" id="openDemo">Ver demo</button>
-          <a class="secondary" href="https://www.linkedin.com/in/joaolprd/" target="_blank" rel="noopener">Meu LinkedIn</a>
-          <a class="secondary" href="https://www.figma.com/proto/tpzqR5DlyJsOoFKJ7C0e0f/Projeto-CareClock?node-id=8-165&starting-point-node-id=8%3A165&embed-host=share" target="_blank" rel="noopener">Protótipo Figma</a>
+          <a class="linkedin-link" href="https://www.linkedin.com/in/joaolprd/" target="_blank" rel="noopener noreferrer">Meu LinkedIn</a>
         </div>
       </div>
-    
-    </div> <aside class="panel" aria-label="Demonstração do app">
+    </div>
+
+    <!-- Painel lateral -->
+    <aside class="panel">
       <div style="text-align:center">
         <strong>Demo interativo</strong>
-        <div style="color:var(--muted);font-size:13px;margin-top:6px">Navegue no protótipo do Figma</div>
+        <div style="color:var(--muted);font-size:13px;margin-top:6px">Protótipo Figma abaixo</div>
       </div>
-      <div class="mock-screen" id="ms-0">
-        <iframe 
-          style="width: 100%; height: 100%; border: none;" 
-          src="https://embed.figma.com/proto/tpzqR5DlyJsOoFKJ7C0e0f/Projeto-CareClock?node-id=8-165&starting-point-node-id=8%3A165&embed-host=share" 
-          allowfullscreen>
-        </iframe>
-      <div class="phone-wrap" role="img" aria-label="Mockup do CareClock com animação">
-        <div class="phone-notch"></div>
-      <div class="phone-screen" id="phoneScreen">
-        <div class="mock-screen" id="ms-0">
-          <img src="assets/screens/1.png" alt="Tela: cadastro CareClock">
-        </div>
-        <div class="mock-screen" id="ms-1" style="display:none">
-          <img src="assets/screens/2.png" alt="Tela: lista de tratamentos">
-        </div>
-        <div class="mock-screen" id="ms-2" style="display:none">
-          <img src="assets/screens/3.png" alt="Tela: sugestão de medicamentos">
-        </div>
-        <div class="mock-screen" id="ms-3" style="display:none">
-          <img src="assets/screens/4.png" alt="Tela: perfil / dependentes">
-        </div>
-         <div class="mock-screen" id="ms-4" style="display:none">
-          <img src="assets/screens/5.png" alt="Tela: perfil / dependentes">
-        </div>
+      <div class="mock-screen">
+        <iframe
+          style="width:100%;height:100%;border:none"
+          src="https://embed.figma.com/proto/tpzqR5DlyJsOoFKJ7C0e0f/Projeto-CareClock?node-id=8-165&starting-point-node-id=8%3A165&embed-host=share"
+          allowfullscreen
+        ></iframe>
       </div>
-
-
-      <div class="phone-actions" style="justify-content:center">
-        <button id="play" class="btn">▶ Play</button>
-        <button id="pause" class="btn">⏸ Pause</button>
-        <div style="font-size:13px;color:var(--muted)">Auto-play: <span id="status">ON</span></div>
-      </div>
-
-      <div style="font-size:13px;color:var(--muted);margin-top:8px;text-align:center">
-      </div>
-      
     </aside>
-  </div> <footer class="site">Desenvolvido por João Lucas • Kotlin • Firebase • UI/UX</footer>
+  </div>
 
-  <script>
-    /* ---------- CAROUSEL ---------- */
-    (function(){
-      const slides = document.getElementById('slides');
-      const next = document.getElementById('next');
-      const prev = document.getElementById('prev');
-      const dots = Array.from(document.querySelectorAll('.dot-ind'));
-      
-      if(!slides || slides.children.length === 0) return;
-
-      const total = slides.children.length;
-      let index = 0;
-      let timer = null;
-
-      function update(){
-        slides.style.transform = `translateX(-${index * 100}%)`;
-        dots.forEach(d => d.style.background = '#e7e7ea');
-        const active = dots[index];
-        if(active) active.style.background = 'var(--accent)';
-      }
-
-      function nextSlide(){
-        index = (index + 1) % total;
-        update();
-      }
-      function prevSlide(){
-        index = (index - 1 + total) % total;
-        update();
-      }
-
-      if(next && prev){
-        next.addEventListener('click', ()=>{ nextSlide(); resetTimer(); });
-        prev.addEventListener('click', ()=>{ prevSlide(); resetTimer(); });
-      }
-      
-      dots.forEach(d=> d.addEventListener('click', (e)=>{ index = Number(e.target.dataset.i); update(); resetTimer(); }));
-
-      function startTimer(){ timer = setInterval(nextSlide, 4500); }
-      function resetTimer(){ clearInterval(timer); startTimer(); }
-      
-      startTimer();
-      update();
-    })();
-
-    /* ---------- SCROLL TO DEMO ---------- */
-    (function(){
-      const openDemoBtn = document.getElementById('openDemo');
-
-      if(openDemoBtn){
-        openDemoBtn.addEventListener('click', ()=> {
-          const panel = document.querySelector('.panel');
-          if(panel) panel.scrollIntoView({behavior:'smooth'});
-        });
-      }
-    })();
-  </script>
+  <footer class="site">Desenvolvido por João Lucas • Kotlin • Firebase • UI/UX</footer>
 </body>
-</html> 
+</html>
