@@ -1,13 +1,12 @@
-<!-- Salve como index.html e coloque /assets/screens/*.png conforme indicado abaixo -->
 <!doctype html>
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>CareClock — Gerenciamento de Tratamentos</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
   <meta name="description" content="CareClock — app Android em Kotlin para gerenciamento de tratamentos. Protótipo, features e tecnologias." />
 
-  <!-- Fonte (Google Fonts) -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 
   <style>
@@ -24,7 +23,7 @@
     }
     *{box-sizing:border-box}
     html,body{height:100%}
-    body{
+   body{
       margin:0;
       font-family:Inter,system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial;
       background:linear-gradient(180deg,var(--bg),#ffffff);
@@ -32,6 +31,7 @@
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
       line-height:1.4;
+      overflow-x: hidden; 
     }
 
     /* container */
@@ -40,7 +40,7 @@
       margin:40px auto;
       padding:20px;
       display:grid;
-      grid-template-columns: 1fr 420px;
+      grid-template-columns: minmax(450px, 1fr) 340px;
       gap:28px;
     }
 
@@ -55,13 +55,26 @@
     header.site .brand{
       display:flex;align-items:center;gap:16px;
     }
+    
+    /* * CSS ATUALIZADO (LOGO MENOR - DESKTOP) */
     .logo{
-      width:74px;height:74px;
-      border-radius:18px;
+      width:60px;height:60px; /* <-- Reduzido */
+      border-radius:14px; /* <-- Ajustado */
       background:linear-gradient(135deg,#2b7cff,#7bb7ff);
       display:flex;align-items:center;justify-content:center;color:white;
-      font-weight:800;font-size:22px;box-shadow:0 6px 18px rgba(40,80,200,0.12);
+      font-weight:800;font-size:18px; /* Reduzido de 22px */
+      box-shadow:0 6px 18px rgba(40,80,200,0.12);
+      padding: 0; 
+      overflow: hidden; 
+      flex-shrink: 0; /* Impede que o logo encolha */
     }
+
+    .logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover; 
+    }
+
     header.site h1{
       margin:0;font-size:22px;
       letter-spacing:-0.4px;
@@ -94,7 +107,8 @@
     }
     .feature-card .dot{
       width:46px;height:46px;border-radius:10px;background:var(--soft);
-      display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--primary)
+      display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--primary);
+      flex-shrink: 0;
     }
     .feature-card h3{margin:0;font-size:16px}
     .feature-card p{margin:6px 0 0;color:var(--muted);font-size:14px}
@@ -118,47 +132,31 @@
       padding:18px;
       box-shadow:0 8px 30px rgba(20,20,30,0.06);
       display:flex;flex-direction:column;align-items:center;gap:14px;
+      position: sticky;
+      top: 40px;
     }
 
-    /* phone mockup */
-    .phone-wrap{
-      width:320px;height:640px;border-radius:36px;
-      background:linear-gradient(180deg,#fff,#f8faff);
-      border:8px solid #0e0e0e03; display:flex;align-items:center;justify-content:center;
-      position:relative;overflow:hidden;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.6);
-    }
-    .phone-notch{ position:absolute;top:8px;left:50%;transform:translateX(-50%);width:90px;height:22px;background:#1110;border-radius:8px;opacity:.05}
-
-    /* screen area where "screens" change */
-    .phone-screen{
-      width:100%;height:100%;display:flex;align-items:center;justify-content:center;
-      padding:28px;
-      transition:transform .6s cubic-bezier(.2,.9,.25,1), opacity .5s;
-    }
+    /* Container do Figma (sem o celular) */
     .mock-screen{
-      width:100%;height:100%;border-radius:28px;background:#fff;overflow:hidden;
+      width:100%;
+      height: 560px; /* Altura do protótipo no desktop */
+      border-radius:28px;
+      background:#fff;
+      overflow:hidden;
       display:flex;flex-direction:column;align-items:stretch;
-      box-shadow:inset 0 2px 0 rgba(0,0,0,0.03);
-      padding:18px;
+      box-shadow: 0 8px 30px rgba(20,20,30,0.06);
     }
-
-    /* We'll use images to represent screens */
-    .mock-screen img{width:100%;height:auto;border-radius:14px;display:block;object-fit:cover}
-
-    /* autoplay indicators below phone */
-    .phone-actions{display:flex;gap:10px;align-items:center;}
-    .phone-actions button{border:0;padding:8px 12px;border-radius:10px;background:var(--glass);cursor:pointer}
 
     /* technologies marquee / esteira */
     .tech-strip{
-      margin-top:14px;
+      margin-top:18px;
       width:100%;
       overflow:hidden;
       border-radius:12px;
       background:linear-gradient(90deg,#ffffff,#fbfbfe);
       padding:8px;
       display:flex;align-items:center;
+      box-shadow:0 8px 30px rgba(20,20,30,0.06);
     }
     .marquee{
       display:flex;gap:20px;align-items:center;
@@ -177,6 +175,7 @@
     /* section: about + ctas */
     .about{
       margin-top:18px;padding:16px;background:var(--card);border-radius:12px;
+      box-shadow:0 8px 30px rgba(20,20,30,0.06);
     }
     .cta{
       display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;
@@ -185,41 +184,90 @@
       background:var(--accent);color:white;padding:12px 16px;border-radius:12px;border:0;font-weight:700;cursor:pointer;
       box-shadow:0 8px 24px rgba(40,180,40,0.12)
     }
-    .secondary{background:transparent;border:1px solid #e6e6ee;padding:10px 14px;border-radius:10px;color:var(--muted);cursor:pointer}
+    .secondary{background:transparent;border:1px solid #e6e6ee;padding:10px 14px;border-radius:10px;color:var(--muted);cursor:pointer; text-decoration: none;}
 
     footer.site{
-      margin-top:18px;text-align:center;color:var(--muted);font-size:13px;padding:10px 0;
+      text-align:center;
+      color:var(--muted);
+      font-size:13px;
+      max-width: 1100px; 
+      margin: 0 auto 40px auto;
+      padding: 10px 20px;
     }
 
     /* responsive */
     @media (max-width:1024px){
-      .wrap{grid-template-columns: 1fr; padding:16px}
-      .panel{order:-1}
-      .phone-wrap{width:300px;height:580px}
+      .wrap{
+        grid-template-columns: 1fr; 
+        padding:16px;
+        margin: 20px auto;
+        grid-template-columns: 1fr; 
+      }
+      .panel{
+        order:-1; 
+        position: static;
+      }
+      
+      .mock-screen{
+        width: 100%; 
+        max-width: 360px; 
+        margin: 0 auto;
+        height: auto; 
+        aspect-ratio: 9 / 16;
+        border-radius: 20px;
+      }
     }
-    @media (max-width:420px){
-      .phone-wrap{width:240px;height:480px}
-      .wrap{margin:18px auto}
+
+    /* * CSS ATUALIZADO (LOGO MENOR - MOBILE) */
+    @media (max-width: 600px){
+      .brand{
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+      .logo{
+        width: 50px; /* <-- Reduzido */
+        height: 50px; /* <-- Reduzido */
+        font-size: 16px; /* <-- Ajustado */
+        border-radius: 12px; /* <-- Ajustado */
+      }
+      header.site h1{
+        font-size: 20px;
+      }
+      .feature-card{
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .feature-card .dot{
+        width: 40px;
+        height: 40px;
+      }
+      .cta{
+        flex-direction: column;
+      }
+      .cta > * {
+        width: 100%;
+        text-align: center;
+      }
     }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <!-- left content -->
     <div>
       <header class="site">
         <div class="brand">
-          <div class="logo">CC</div>
+          <div class="logo">
+            <img src="assets/screens/logologin.png" alt="Logo do CareClock">
+          </div>
           <div>
             <h1>CareClock</h1>
             <p class="lead">App Android (Kotlin) para gerenciar tratamentos — lembretes, dependentes e recomendações.</p>
           </div>
         </div>
 
-        <!-- carousel -->
         <div class="carousel" aria-roledescription="carousel" id="carousel">
           <div class="slides" id="slides">
-            <!-- slide 1 -->
             <div class="slide">
               <div class="feature-card">
                 <div class="dot">1</div>
@@ -237,7 +285,6 @@
               </div>
             </div>
 
-            <!-- slide 2 -->
             <div class="slide">
               <div class="feature-card">
                 <div class="dot">2</div>
@@ -255,7 +302,6 @@
               </div>
             </div>
 
-            <!-- slide 3 -->
             <div class="slide">
               <div class="feature-card">
                 <div class="dot">3</div>
@@ -274,93 +320,78 @@
             </div>
           </div>
 
-          <!-- controls -->
           <div class="controls" aria-hidden="true">
             <button class="btn" id="prev" title="Anterior">◀</button>
             <button class="btn" id="next" title="Próximo">▶</button>
           </div>
 
-          <!-- pagination -->
           <div class="dots" id="dots" aria-hidden="true">
             <div class="dot-ind" data-i="0"></div>
             <div class="dot-ind" data-i="1"></div>
             <div class="dot-ind" data-i="2"></div>
           </div>
         </div>
-
-        <!-- tech marquee -->
-        <div class="tech-strip" aria-hidden="true">
-          <div class="marquee" id="marquee">
-            <!-- Repita itens para efeito contínuo -->
-            <div class="tech">Kotlin</div>
-            <div class="tech">Firebase</div>
-            <div class="tech">XML (Android Views)</div>
-            <div class="tech">Git / GitHub</div>
-            <div class="tech">Figma</div>
-            <div class="tech">Java — Interoperabilidade</div>
-            <div class="tech">Kotlin</div>
-            <div class="tech">Firebase</div>
-            <div class="tech">XML (Android Views)</div>
+      </header> 
+      <div class="tech-strip" aria-hidden="true">
+        <div class="marquee" id="marquee">
+          <div class="tech">
+            <i class="devicon-kotlin-plain colored"></i> Kotlin
+          </div>
+          <div class="tech">
+            <i class="devicon-firebase-plain colored"></i> Firebase
+          </div>
+          <div class="tech">
+            <i class="devicon-android-plain colored"></i> Android
+          </div>
+          <div class="tech">
+            <i class="devicon-figma-plain colored"></i> Figma
+          </div>
+          <div class="tech">
+            <i class="devicon-java-plain colored"></i> Java
+          </div>
+    
+          <div class="tech">
+            <i class="devicon-kotlin-plain colored"></i> Kotlin
+          </div>
+          <div class="tech">
+            <i class="devicon-firebase-plain colored"></i> Firebase
+          </div>
+          <div class="tech">
+            <i class="devicon-android-plain colored"></i> Android
           </div>
         </div>
+      </div>
 
-        <div class="about">
-          <strong>Sobre o CareClock</strong>
-          <p style="margin:8px 0 0;color:var(--muted);font-size:14px">
-            CareClock é um app Android em Kotlin para gestão de tratamentos, pensado em pacientes e cuidadores.
-            Implementado com Views/XML e integração Firebase — pensado para ser simples e escalável.
-          </p>
+      <div class="about">
+        <strong>Sobre o CareClock</strong>
+        <p style="margin:8px 0 0;color:var(--muted);font-size:14px">
+          CareClock é um app Android em Kotlin para gestão de tratamentos, pensado em pacientes e cuidadores.
+          Implementado com Views/XML e integração Firebase, pensado para ser simples e escalável.
+        </p>
 
-          <div class="cta">
-            <button class="primary" id="openDemo">Ver demo</button>
-            <a class="secondary" href="https://github.com/joaolpdr/CareClock" target="_blank" rel="noopener">Código no GitHub</a>
-            <a class="secondary" href="#" target="_blank">Protótipo Figma</a>
-          </div>
+        <div class="cta">
+          <button class="primary" id="openDemo">Ver demo</button>
+          <a class="secondary" href="https://www.linkedin.com/in/joaolprd/" target="_blank" rel="noopener">Meu LinkedIn</a>
+          <a class="secondary" href="https://www.figma.com/proto/tpzqR5DlyJsOoFKJ7C0e0f/Projeto-CareClock?node-id=8-165&starting-point-node-id=8%3A165&embed-host=share" target="_blank" rel="noopener">Protótipo Figma</a>
         </div>
-
-        <footer class="site">Desenvolvido por João Lucas • Kotlin • Firebase • UI/UX</footer>
-      </header>
-    </div>
-
-    <!-- right panel: phone animation -->
-    <aside class="panel" aria-label="Demonstração do app">
+      </div>
+    
+    </div> <aside class="panel" aria-label="Demonstração do app">
       <div style="text-align:center">
         <strong>Demo interativo</strong>
-        <div style="color:var(--muted);font-size:13px;margin-top:6px">Simulação do fluxo do app no celular</div>
+        <div style="color:var(--muted);font-size:13px;margin-top:6px">Navegue no protótipo do Figma</div>
       </div>
 
-      <div class="phone-wrap" role="img" aria-label="Mockup do CareClock com animação">
-        <div class="phone-notch"></div>
-
-        <!-- screens container -->
-        <div class="phone-screen" id="phoneScreen">
-          <div class="mock-screen" id="ms-0">
-            <!-- Troque por prints reais. Recomendado: /assets/screens/1.png -->
-            <img src="assets/screens/1.png" alt="Tela: cadastro CareClock">
-          </div>
-          <div class="mock-screen" id="ms-1" style="display:none">
-            <img src="assets/screens/2.png" alt="Tela: lista de tratamentos">
-          </div>
-          <div class="mock-screen" id="ms-2" style="display:none">
-            <img src="assets/screens/3.png" alt="Tela: sugestão de medicamentos">
-          </div>
-          <div class="mock-screen" id="ms-3" style="display:none">
-            <img src="assets/screens/4.png" alt="Tela: perfil / dependentes">
-          </div>
-        </div>
+      <div class="mock-screen" id="ms-0">
+        <iframe 
+          style="width: 100%; height: 100%; border: none;" 
+          src="https://embed.figma.com/proto/tpzqR5DlyJsOoFKJ7C0e0f/Projeto-CareClock?node-id=8-165&starting-point-node-id=8%3A165&embed-host=share" 
+          allowfullscreen>
+        </iframe>
       </div>
-
-      <div class="phone-actions" style="justify-content:center">
-        <button id="play" class="btn">▶ Play</button>
-        <button id="pause" class="btn">⏸ Pause</button>
-        <div style="font-size:13px;color:var(--muted)">Auto-play: <span id="status">ON</span></div>
-      </div>
-
-      <div style="font-size:13px;color:var(--muted);margin-top:8px;text-align:center">
-        Dica: substitua as imagens dentro de <code>/assets/screens/</code> pelos prints do app.
-      </div>
+      
     </aside>
-  </div>
+  </div> <footer class="site">Desenvolvido por João Lucas • Kotlin • Firebase • UI/UX</footer>
 
   <script>
     /* ---------- CAROUSEL ---------- */
@@ -369,6 +400,9 @@
       const next = document.getElementById('next');
       const prev = document.getElementById('prev');
       const dots = Array.from(document.querySelectorAll('.dot-ind'));
+      
+      if(!slides || slides.children.length === 0) return;
+
       const total = slides.children.length;
       let index = 0;
       let timer = null;
@@ -389,81 +423,31 @@
         update();
       }
 
-      next.addEventListener('click', ()=>{ nextSlide(); resetTimer(); });
-      prev.addEventListener('click', ()=>{ prevSlide(); resetTimer(); });
+      if(next && prev){
+        next.addEventListener('click', ()=>{ nextSlide(); resetTimer(); });
+        prev.addEventListener('click', ()=>{ prevSlide(); resetTimer(); });
+      }
+      
       dots.forEach(d=> d.addEventListener('click', (e)=>{ index = Number(e.target.dataset.i); update(); resetTimer(); }));
 
       function startTimer(){ timer = setInterval(nextSlide, 4500); }
       function resetTimer(){ clearInterval(timer); startTimer(); }
+      
       startTimer();
       update();
     })();
 
-    /* ---------- PHONE MOCK ANIMATION ---------- */
+    /* ---------- SCROLL TO DEMO ---------- */
     (function(){
-      const screens = Array.from(document.querySelectorAll('.mock-screen'));
-      let cur = 0;
-      let playing = true;
-      let phoneTimer = null;
-      const status = document.getElementById('status');
-      const playBtn = document.getElementById('play');
-      const pauseBtn = document.getElementById('pause');
+      const openDemoBtn = document.getElementById('openDemo');
 
-      function showScreen(i){
-        screens.forEach((s, idx)=>{
-          if(idx===i){
-            s.style.display = 'flex';
-            s.style.opacity = '0';
-            s.style.transform = 'translateY(8px)';
-            requestAnimationFrame(()=>{ s.style.transition='opacity .5s, transform .5s'; s.style.opacity='1'; s.style.transform='translateY(0)'; })
-          } else {
-            s.style.display = 'none';
-            s.style.transition='';
-          }
-        })
+      if(openDemoBtn){
+        openDemoBtn.addEventListener('click', ()=> {
+          const panel = document.querySelector('.panel');
+          if(panel) panel.scrollIntoView({behavior:'smooth'});
+        });
       }
-
-      function next(){
-        cur = (cur + 1) % screens.length;
-        showScreen(cur);
-      }
-
-      function start(){
-        clearInterval(phoneTimer);
-        phoneTimer = setInterval(next, 3200);
-        playing = true; status.textContent='ON';
-      }
-      function stop(){
-        clearInterval(phoneTimer);
-        playing = false; status.textContent='OFF';
-      }
-
-      playBtn.addEventListener('click', ()=>{ start(); });
-      pauseBtn.addEventListener('click', ()=>{ stop(); });
-
-      // open demo button scrolls to phone
-      document.getElementById('openDemo').addEventListener('click', ()=> {
-        document.querySelector('.panel').scrollIntoView({behavior:'smooth'});
-      });
-
-      // start autoplay
-      showScreen(0);
-      start();
-    })();
-
-    /* ---------- SMALL ACCESSIBILITY + FALLBACK ---------- */
-    // If assets missing, replace with gradient placeholders
-    (function(){
-      const imgs = document.querySelectorAll('.mock-screen img');
-      imgs.forEach(img=>{
-        img.onerror = function(){
-          this.style.display='none';
-          const parent = this.parentElement;
-          parent.style.background = 'linear-gradient(180deg,#f5f8ff,#fff)';
-          parent.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted);font-weight:600">Imagem não encontrada<br><small style="font-weight:400">/assets/screens/1.png</small></div>';
-        }
-      })
     })();
   </script>
 </body>
-</html>
+</html> 
